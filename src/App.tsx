@@ -8,19 +8,13 @@ import Container from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Form from 'react-bootstrap/Form'
 
-import {
-  Dice1Fill,
-  Dice2Fill,
-  Dice3Fill,
-  Dice4Fill,
-  Dice5Fill,
-  Dice6Fill,
-  Square,
-} from 'react-bootstrap-icons';
+import { Square } from 'react-bootstrap-icons';
 
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 
+
+import { TwoDIcon, throwDice } from './components/dice';
 import './App.css';
 
 function App(): JSX.Element {
@@ -216,9 +210,9 @@ function CharacteristicsStep(props: {
   nextStep: (event: any) => void
 }): JSX.Element | null {
   if (props.status.step === 1) {
-    const dice: number[][] = throw2d(6);
+    const dice: number[][] = Array.apply(null, Array(6)).map(_ => throwDice(2));
     const diceRow: JSX.Element[] = dice.map((values) => (
-      <Col>
+      <Col className="d-flex justify-content-center">
         <TwoDIcon values={values} />
       </Col>
     ));
@@ -249,57 +243,6 @@ function CharacteristicsStep(props: {
     );
   }
   return null;
-}
-
-function DieIcon(props: { value: number }): JSX.Element {
-
-  const DiceIcons: ComponentType[] = [
-    Dice1Fill, Dice2Fill, Dice3Fill, Dice4Fill, Dice5Fill, Dice6Fill,
-  ]
-
-  const diceprops: {
-    className: string,
-    size: number
-  } = {
-    className: "text-primary p-1",
-    size: 48
-  }
-
-  const Icon: ComponentType<any> = DiceIcons[props.value - 1]
-
-  return <Icon {...diceprops} />;
-}
-
-function TwoDIcon(props: any): JSX.Element {
-  const containerStyle = {
-    width: '100px',
-    height: '100px',
-    "flex-direction": 'column',
-    "border-radius": '15px',
-  }
-  return (
-    <Container className="border border-secondary d-flex justify-content-center" style={containerStyle}>
-      <Row className="d-flex justify-content-center">
-        <DieIcon value={props.values[0]} />
-        <DieIcon value={props.values[1]} />
-      </Row>
-      <Row className='d-flex justify-content-center'>
-        <b className="text-primary pt-1">{props.values[0] + props.values[1]}</b>
-      </Row>
-    </Container>
-  );
-}
-
-function throw2d(n: number): number[][] {
-  let rolls: number[][] = [];
-  let i: number;
-  for (i = 0; i < n; i++) {
-    rolls.push([
-      Math.floor(Math.random() * Math.floor(5)) + 1,
-      Math.floor(Math.random() * Math.floor(5)) + 1
-    ]);
-  }
-  return rolls;
 }
 
 export default App;
